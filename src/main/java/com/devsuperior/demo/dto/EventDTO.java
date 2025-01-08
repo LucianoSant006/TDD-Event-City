@@ -31,6 +31,7 @@ public class EventDTO {
 		cityId = entity.getCity().getId();
 	}
 
+
 	public Long getId() {
 		return id;
 	}

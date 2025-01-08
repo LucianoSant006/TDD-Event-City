@@ -52,5 +52,22 @@ public class EventControllerIT {
 		result.andExpect(jsonPath("$.cityId").value(7L));
 	}
 
+	@Test
+	public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+
+		long nonExistingId = 1000L;
+
+		EventDTO dto = new EventDTO(null, "Expo XP", LocalDate.of(2021, 5, 18), "https://expoxp.com.br", 7L);
+		String jsonBody = objectMapper.writeValueAsString(dto);
+
+		ResultActions result =
+				mockMvc.perform(put("/events/{id}", nonExistingId)
+						.content(jsonBody)
+						.contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON));
+
+		result.andExpect(status().isNotFound());
+	}
+
 
 }
