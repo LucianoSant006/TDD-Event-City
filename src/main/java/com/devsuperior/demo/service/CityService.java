@@ -36,5 +36,16 @@ public class CityService {
         return new CityDTO(entity);
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void  delete(Long id) {
 
+        if (!cityRepository.existsById(id)) {
+            throw new ResourceNotFound("id Not Fund");
+        }
+        try {
+            cityRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new RuntimeException("Error deleting city with ID " + id, e);
+        }
+    }
 }
