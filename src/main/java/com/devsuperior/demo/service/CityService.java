@@ -3,8 +3,10 @@ package com.devsuperior.demo.service;
 import com.devsuperior.demo.dto.CityDTO;
 import com.devsuperior.demo.entities.City;
 import com.devsuperior.demo.repositories.CityRepository;
+import com.devsuperior.demo.service.exceptions.DatabaseException;
 import com.devsuperior.demo.service.exceptions.ResourceNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
 
 @Service
 public class CityService {
@@ -37,15 +40,17 @@ public class CityService {
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
-    public void  delete(Long id) {
-
+    public void delete(Long id) {
         if (!cityRepository.existsById(id)) {
-            throw new ResourceNotFound("id Not Fund");
+            throw new ResourceNotFound("Client not found with ID: "+ id);
         }
         try {
             cityRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new RuntimeException("Error deleting city with ID " + id, e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Referential integrity failure");
+
         }
     }
-}
+
+    }
+
