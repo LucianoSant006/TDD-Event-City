@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -77,6 +78,18 @@ public class CityControllerIT {
                 mockMvc.perform(delete("/cities/{id}", nonExistingId));
 
         result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void deleteShouldReturnBadRequestWhenDependentId() throws Exception {
+
+        Long dependentId = 1L;
+
+        ResultActions result =
+                mockMvc.perform(delete("/cities/{id}", dependentId));
+
+        result.andExpect(status().isBadRequest());
     }
 
 	}
