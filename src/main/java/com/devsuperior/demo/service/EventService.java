@@ -4,6 +4,7 @@ import com.devsuperior.demo.dto.EventDTO;
 import com.devsuperior.demo.entities.City;
 import com.devsuperior.demo.entities.Event;
 import com.devsuperior.demo.repositories.EventRepository;
+import com.devsuperior.demo.service.exceptions.ResourceNotFound;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class EventService {
     public EventDTO update(Long id, EventDTO dto) {
 
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Id Not Found"));
+                .orElseThrow(() -> new ResourceNotFound("Id Not Found"));
 
         event.setName(dto.getName());
         event.setDate(dto.getDate());
