@@ -11,8 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,6 +54,18 @@ public class CityControllerIT {
         result.andExpect(status().isCreated());
         result.andExpect(jsonPath("$.id").exists());
         result.andExpect(jsonPath("$.name").value("Recife"));
+    }
+
+    @Test
+    public void deleteShouldReturnNoContentWhenIndependentId() throws Exception {
+
+        Long independentId = 5L;
+
+        ResultActions result =
+                mockMvc.perform(delete("/cities/{id}", independentId));
+
+
+        result.andExpect(status().isNoContent());
     }
 
 	}

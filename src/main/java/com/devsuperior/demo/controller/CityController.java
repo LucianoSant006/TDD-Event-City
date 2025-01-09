@@ -31,4 +31,5 @@ public class CityController {
                 .buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(cityDTO);
     }
+
 }
