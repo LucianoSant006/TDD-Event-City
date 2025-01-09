@@ -17,10 +17,21 @@ public class CityService {
     @Autowired
     private CityRepository cityRepository;
 
-    @Transactional(readOnly = true )
-    public List<CityDTO> findAll(){
+    @Transactional(readOnly = true)
+    public List<CityDTO> findAll() {
         List<City> list = cityRepository.findAll(Sort.by("name"));
         return list.stream().map(CityDTO::new).collect(Collectors.toList());
     }
+
+    @Transactional
+    public CityDTO insert(CityDTO dto) {
+        City entity = new City();
+        entity.setId(dto.getId());
+        entity.setName(dto.getName());
+        cityRepository.save(entity);
+
+        return new CityDTO(entity);
+    }
+
 
 }

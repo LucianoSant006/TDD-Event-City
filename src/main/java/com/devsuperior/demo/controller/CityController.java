@@ -5,10 +5,10 @@ import com.devsuperior.demo.entities.City;
 import com.devsuperior.demo.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -22,5 +22,13 @@ public class CityController {
     public ResponseEntity<List<CityDTO>> findAll(){
         List<CityDTO> list = cityService.findAll();
         return ResponseEntity.ok().body(list);
+    }
+
+    @PostMapping
+    public ResponseEntity<CityDTO> insert(@RequestBody CityDTO dto){
+        CityDTO cityDTO = cityService.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/id")
+                .buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(cityDTO);
     }
 }
